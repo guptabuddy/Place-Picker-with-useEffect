@@ -52,6 +52,10 @@ function App() {
 		// Here we are using the selectedPlace ref, because we need to access the id of the place that was selected, but that ID might loss in between the modal opening and closing (as the component function might re-execute).
 		// So we used the ref to store the selected place ID, so that even if the component function is re-executed, the selected place ID is still available.
 		modal.current.close();
+
+		const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
+		localStorage.setItem("selectedPlaces", JSON.stringify(storedIds.filter((id) => id != selectedPlace.current)));
+		// Remember to convert the Array to string form while storing the data into local storage, and also to convert the string back to array form when retrieving the data from local storage. (Using JSON.stringify  &&  JSON.parse methods respectively)
 	}
 
 	return (
