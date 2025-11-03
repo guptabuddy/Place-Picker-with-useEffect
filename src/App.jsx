@@ -25,9 +25,15 @@ function App() {
 	useEffect(() => {
 		navigator.geolocation.getCurrentPosition((position) => {
 			const sortedPlaces = sortPlacesByDistance(AVAILABLE_PLACES, position.coords.latitude, position.coords.longitude);
-
 			setAvailablePlaces(sortedPlaces);
 		});
+
+		// THIS I HAVE TO CHECK, HOW CAN I SORT THE STORED SELECTED PLACES
+		// ========
+		// navigator.geolocation.getCurrentPosition((position) => {
+		// 	const sortedStoredPlaces = sortPlacesByDistance(storedPlaces, position.coords.latitude, position.coords.longitude);
+		// 	setPickedPlaces(sortedStoredPlaces);
+		// });
 	}, []);
 
 	function handleStartRemovePlace(id) {
@@ -48,6 +54,17 @@ function App() {
 			}
 			const place = AVAILABLE_PLACES.find((place) => place.id === id);
 			return [place, ...prevPickedPlaces];
+
+			// THIS I HAVE TO CHECK, HOW CAN I SORT THE STORED SELECTED PLACES
+			// =======
+			// const sortedStoredPlaces = [place, ...prevPickedPlaces];
+			// let newSortedStoredPlaces;
+			// navigator.geolocation.getCurrentPosition((position) => {
+			// 	newSortedStoredPlaces = sortPlacesByDistance(sortedStoredPlaces, position.coords.latitude, position.coords.longitude);
+			// 	// console.log(newSortedStoredPlaces);
+			// });
+			// return newSortedStoredPlaces;
+			// // console.log(newSortedStoredPlaces);
 		});
 
 		const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
