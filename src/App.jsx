@@ -7,11 +7,20 @@ import DeleteConfirmation from "./components/DeleteConfirmation.jsx";
 import logoImg from "./assets/logo.png";
 import { sortPlacesByDistance } from "./loc.js";
 
+// BELOW IS A SIDE EFFECT WHICH DOES NOT NEED useEffect
+const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
+// const storedPlaces = storedIds.map((id) => AVAILABLE_PLACES.find((place) => place.id === id));
+// const storedPlaces = AVAILABLE_PLACES.filter((place) => storedIds.indexOf(place.id) !== -1);
+const storedPlaces = AVAILABLE_PLACES.filter((place) => storedIds.includes(place.id));
+
+// WE PLACED THE ABOVE SIDE EFFECT OUTSIDE OF THE APP COMPONENT FUNCTION, BECAUSE WE DO NOT NEED ANYTHING FROM THE APP COMPONENT FUNCTION FOR THIS SIDE EFFECT.
+// AND WE DO NOT WANT THIS SIDE EFFECT TO RUN AGAIN IF THE APP COMPONENT FUNCTION IS RE-EXECUTED. WE NEED THE PREVIOUSLY STORED PLACES JUST ONCE, TO SHOW THEM WHEN THE APP STARTS
+
 function App() {
 	const modal = useRef();
 	const selectedPlace = useRef();
 	const [availablePlaces, setAvailablePlaces] = useState([]);
-	const [pickedPlaces, setPickedPlaces] = useState([]);
+	const [pickedPlaces, setPickedPlaces] = useState(storedPlaces);
 
 	useEffect(() => {
 		navigator.geolocation.getCurrentPosition((position) => {
