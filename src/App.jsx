@@ -17,8 +17,9 @@ const storedPlaces = AVAILABLE_PLACES.filter((place) => storedIds.includes(place
 // AND WE DO NOT WANT THIS SIDE EFFECT TO RUN AGAIN IF THE APP COMPONENT FUNCTION IS RE-EXECUTED. WE NEED THE PREVIOUSLY STORED PLACES JUST ONCE, TO SHOW THEM WHEN THE APP STARTS
 
 function App() {
-	const modal = useRef();
 	const selectedPlace = useRef();
+	// const modal = useRef();
+	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [availablePlaces, setAvailablePlaces] = useState([]);
 	const [pickedPlaces, setPickedPlaces] = useState(storedPlaces);
 
@@ -37,14 +38,20 @@ function App() {
 	}, []);
 
 	function handleStartRemovePlace(id) {
-		modal.current.open();
+		// modal.current.open();
+
+		// NOW WE WILL USE useEffect() IN PLACE OF useImperativeHandle() IN MODAL COMPONENT, SO WE USED THIS STATE UPDATING FUNCTION
+		setModalIsOpen(true);
 		selectedPlace.current = id;
 		// Here we are using the selectedPlace ref, because we need to access the id of the place that was selected, but that ID might loss in between the modal opening and closing (as the component function might re-execute).
 		// So we used the ref to store the selected place ID, so that even if the component function is re-executed, the selected place ID is still available.
 	}
 
 	function handleStopRemovePlace() {
-		modal.current.close();
+		// modal.current.close();
+
+		// NOW WE WILL USE useEffect() IN PLACE OF useImperativeHandle() IN MODAL COMPONENT, SO WE USED THIS STATE UPDATING FUNCTION
+		setModalIsOpen(false);
 	}
 
 	function handleSelectPlace(id) {
@@ -77,7 +84,10 @@ function App() {
 		setPickedPlaces((prevPickedPlaces) => prevPickedPlaces.filter((place) => place.id !== selectedPlace.current));
 		// Here we are using the selectedPlace ref, because we need to access the id of the place that was selected, but that ID might loss in between the modal opening and closing (as the component function might re-execute).
 		// So we used the ref to store the selected place ID, so that even if the component function is re-executed, the selected place ID is still available.
-		modal.current.close();
+		// modal.current.close();
+
+		// NOW WE WILL USE useEffect() IN PLACE OF useImperativeHandle() IN MODAL COMPONENT, SO WE USED THIS STATE UPDATING FUNCTION
+		setModalIsOpen(false);
 
 		const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
 		localStorage.setItem("selectedPlaces", JSON.stringify(storedIds.filter((id) => id != selectedPlace.current)));
@@ -86,7 +96,8 @@ function App() {
 
 	return (
 		<>
-			<Modal ref={modal}>
+			{/* <Modal ref={modal}> */}
+			<Modal open={modalIsOpen}>
 				<DeleteConfirmation onCancel={handleStopRemovePlace} onConfirm={handleRemovePlace} />
 			</Modal>
 
